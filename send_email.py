@@ -5,26 +5,38 @@ from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import (Mail, Attachment, FileContent, FileName, FileType, Disposition)
 
 
-message = Mail(
-    from_email='roshanshrestha01@gmail.com',
-    to_emails='roshanshrestha@whitehatengineering.com',
-    subject='Sending with Twilio SendGrid is Fun',
-    html_content='<strong>and easy to do anywhere, even with Python</strong>'
-)
+class SendgridMail:
+    def __init__(self, filename, receivers):
+        self.filename = filename
+        self.receivers = receivers
+        self.attached_file = None
 
-with open('downloads/t.xlsx', 'rb') as f:
-    data = f.read()
-    f.close()
-encoded_file = base64.b64encode(data).decode()
+    def set_attachment(self, path):
+        with open(path, 'rb') as f:
+            data = f.read()
+            f.close()
 
-attachedFile = Attachment(
-    FileContent(encoded_file),
-    FileName('today.xlsx'),
-    FileType('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
-    Disposition('attachment')
-)
-message.attachment = attachedFile
+        encoded_file = base64.b64encode(data).decode()
 
-sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
-response = sg.send(message)
-print(response.status_code, response.body, response.headers)
+        attached_file = Attachment(
+            FileContent(encoded_file),
+            FileName(self.filename),
+            FileType('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
+            Disposition('attachment')
+        )
+
+        self.attached_file = attached_file
+
+    def send_mail(self):
+        if not self.attached_file:
+            raise Exception("Sorry, no attached file found.")
+        message = Mail(
+            from_email=os.environ.get('FROM_EMAIL'),
+            to_emails=self.receivers,
+            subject='Sending weekly report {}.'.format(self.filename),
+            html_content='<strong>Please find in attachment.</strong>'
+        )
+        message.attachment = self.attached_file
+        sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+        response = sg.send(message)
+        print(response.status_code, "{} sent.".format(self.filename))
