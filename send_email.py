@@ -31,12 +31,12 @@ class SendgridMail:
         if not self.attached_file:
             raise Exception("Sorry, no attached file found.")
         message = Mail(
-            from_email=os.environ.get('FROM_EMAIL'),
+            from_email=os.getenv('FROM_EMAIL'),
             to_emails=self.receivers,
             subject='Sending weekly report {}.'.format(self.filename),
             html_content='<strong>Please find in attachment.</strong>'
         )
         message.attachment = self.attached_file
-        sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+        sg = SendGridAPIClient(os.getenv('SENDGRID_API_KEY'))
         response = sg.send(message)
         print(response.status_code, "{} sent.".format(self.filename))
