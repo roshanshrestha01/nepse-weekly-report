@@ -1,0 +1,11 @@
+.idea
+downloads
+__pycache__
+
+*.py[cod]
+*$py.class
+
+pip-log.txt
+pip-delete-this-directory.txt
+
+.env
