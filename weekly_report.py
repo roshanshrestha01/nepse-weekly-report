@@ -42,11 +42,12 @@ class WeeklyReport:
         return report_detail
 
     def get_latest_week(self, week_number=TODAY_WEEK_NUMBER):
+        previous_week = week_number - 1
         year = datetime.now().year
         latest_reports = []
         reports = self.get_reports()
         for report in reports:
-            if report['week_number'] >= week_number and report['year'] == year:
+            if report['week_number'] >= previous_week and report['year'] == year:
                 latest_reports.append(report)
         return latest_reports
 
