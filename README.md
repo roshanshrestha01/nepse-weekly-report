@@ -6,7 +6,7 @@ Always wanted to view weekly report from [nepalstock.com](http://www.nepalstock.
 
 - [x] Download report and save in proper location
 - [x] Send report as attachment to list of receiving emails.
-- [ ] Add cron job to send on weekly basis
+- [x] Add cron job to send on weekly basis
 - [ ] Parse xlsx content and generate a graph report
 
 ## Install
