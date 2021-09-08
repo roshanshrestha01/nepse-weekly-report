@@ -1,5 +1,5 @@
 import os
-
+from datetime import datetime
 from weekly_report import WeeklyReport
 from send_email import SendgridMail
 from dotenv import load_dotenv
@@ -15,7 +15,7 @@ reports = weekly_report_obj.get_latest_week()
 path = './downloads/'
 
 if not reports:
-    print("Not reports to email.")
+    print("Not reports to email.", datetime.now())
 
 for report in reports:
     filename = '{}.xlsx'.format(report['date'])
